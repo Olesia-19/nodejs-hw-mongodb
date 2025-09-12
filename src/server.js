@@ -22,7 +22,7 @@ export const setupServer = () => {
     }),
   );
 
-  app.get('/contacts/:id', async (req, res) => {
+  app.get('/contacts', async (req, res) => {
     const contacts = await getAllContacts();
     res.status(200).json({
       status: 200,
