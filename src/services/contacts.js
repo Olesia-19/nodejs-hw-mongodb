@@ -16,7 +16,9 @@ export const postContact = async (payload) => {
 };
 
 export const patchContact = async (id, payload) => {
-  const contact = await ContactsCollection.findByIdAndUpdate(id, payload);
+  const contact = await ContactsCollection.findByIdAndUpdate(id, payload, {
+    new: true,
+  });
   return contact;
 };
 
