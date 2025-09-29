@@ -2,6 +2,8 @@ const parseSortOrder = (value) => {
   if (value !== 'asc' && value !== 'desc') {
     return 'asc';
   }
+
+  return value;
 };
 
 const parseSortBy = (value) => {
@@ -17,6 +19,8 @@ const parseSortBy = (value) => {
   if (!keysOfContacts.includes(value)) {
     return '_id';
   }
+
+  return value;
 };
 
 export const parseSortParams = (query) => {

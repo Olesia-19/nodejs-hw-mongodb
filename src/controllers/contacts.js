@@ -39,7 +39,7 @@ export async function getContactByIdController(req, res, next) {
 
   res.status(200).json({
     status: 200,
-    message: `Successfully found contact with id {id}!`,
+    message: `Successfully found contact with id ${id}!`,
     data: contact,
   });
 }
@@ -77,5 +77,5 @@ export async function deleteContactController(req, res, next) {
 
   res
     .status(204)
-    .json({ status: 204, message: 'Student deleted successfully' });
+    .json({ status: 204, message: 'Contact deleted successfully' });
 }

@@ -8,7 +8,7 @@ import {
   postContactController,
 } from '../controllers/contacts.js';
 import { validateBody } from '../middlewares/validateBody.js';
-import { contactSchema } from '../validation/contacts.js';
+import { contactSchema, updateContactSchema } from '../validation/contacts.js';
 import { isValidId } from '../middlewares/isValidId.js';
 
 const router = express.Router();
@@ -26,7 +26,7 @@ router.post(
 router.patch(
   '/:id',
   isValidId,
-  validateBody(contactSchema),
+  validateBody(updateContactSchema),
   ctrlWrapper(patchContactController),
 );
 

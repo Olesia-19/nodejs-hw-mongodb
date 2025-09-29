@@ -10,8 +10,8 @@ const parseIsFavourite = (value) => {
   const isString = typeof value === 'string';
   if (!isString) return;
 
-  const isFavourite = ['true', 'false'];
-  if (isFavourite.includes(value)) return value;
+  if (value === 'true') return true;
+  if (value === 'false') return false;
 };
 
 export const parseFilterParams = (query) => {
