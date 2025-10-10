@@ -3,6 +3,9 @@ import { SessionsCollection } from '../db/models/session.js';
 import bcrypt from 'bcrypt';
 import createHttpError from 'http-errors';
 import { randomBytes } from 'crypto';
+import jwt from 'jsonwebtoken';
+import { getEnvVar } from '../utils/getEnvVar.js';
+import { sendMail } from '../utils/sendMail.js';
 
 export const registerUser = async (payload) => {
   const user = await UsersCollection.findOne({ email: payload.email });
@@ -76,4 +79,55 @@ export const refreshSession = async ({ sessionId, refreshToken }) => {
 
 export const logoutUser = async (sessionId) => {
   await SessionsCollection.deleteOne({ _id: sessionId });
+};
+
+export const sendResetEmail = async (email) => {
+  const user = await UsersCollection.findOne({ email });
+  if (!user) throw createHttpError(404, 'User not found!');
+
+  const token = jwt.sign({ sub: user._id, email }, getEnvVar('JWT_SECRET'), {
+    expiresIn: '5m',
+  });
+
+  const resetLink = `${getEnvVar('APP_DOMAIN')}/reset-password?token=${token}`;
+
+  try {
+    await sendMail({
+      from: getEnvVar('SMTP_FROM'),
+      to: email,
+      subject: 'Reset your password',
+      html: `<p>Click <a href="${resetLink}">here</a> to reset your password!</p>`,
+    });
+  } catch {
+    throw createHttpError(
+      500,
+      'Failed to send the email, please try again later.',
+    );
+  }
+};
+
+export const resetPassword = async (token, password) => {
+  try {
+    const decoded = jwt.verify(token, getEnvVar('JWT_SECRET'));
+    const hashedPassword = await bcrypt.hash(password, 10);
+
+    const user = await UsersCollection.findById(decoded.sub);
+
+    if (!user) {
+      throw createHttpError(404, 'User not found!');
+    }
+
+    user.password = hashedPassword;
+    await user.save();
+
+    await SessionsCollection.deleteMany({ userId: user._id });
+  } catch (error) {
+    if (
+      error.name === 'TokenExpiredError' ||
+      error.name === 'JsonWebTokenError'
+    ) {
+      throw createHttpError(401, 'Token is expired or invalid.');
+    }
+    throw error;
+  }
 };

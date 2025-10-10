@@ -10,6 +10,7 @@ import {
 import { validateBody } from '../middlewares/validateBody.js';
 import { contactSchema, updateContactSchema } from '../validation/contacts.js';
 import { isValidId } from '../middlewares/isValidId.js';
+import { upload } from '../middlewares/upload.js';
 
 const router = express.Router();
 
@@ -19,12 +20,14 @@ router.get('/:id', isValidId, ctrlWrapper(getContactByIdController));
 
 router.post(
   '/',
+  upload.single('photo'),
   validateBody(contactSchema),
   ctrlWrapper(postContactController),
 );
 
 router.patch(
   '/:id',
+  upload.single('photo'),
   isValidId,
   validateBody(updateContactSchema),
   ctrlWrapper(patchContactController),
