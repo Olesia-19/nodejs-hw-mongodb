@@ -14,7 +14,7 @@
       "url": "http://localhost:3000"
     },
     {
-      "url": null
+      "url": "https://nodejs-hw-mongodb-rnrd.onrender.com/"
     }
   ],
   "tags": [
@@ -40,7 +40,7 @@
         "parameters": [
           {
             "in": "path",
-            "name": "contactId",
+            "name": "id",
             "required": true,
             "description": "The unique identifier of the contact",
             "schema": {
@@ -119,7 +119,7 @@
         "parameters": [
           {
             "in": "path",
-            "name": "contactId",
+            "name": "id",
             "required": true,
             "description": "The unique identifier of the contact to update",
             "schema": {
@@ -246,7 +246,7 @@
         "parameters": [
           {
             "in": "path",
-            "name": "contactId",
+            "name": "id",
             "required": true,
             "description": "The unique identifier of the contact to delete",
             "schema": {
